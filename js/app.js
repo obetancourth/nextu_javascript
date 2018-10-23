@@ -2,7 +2,8 @@ var calculadora = {
   init: function(){
     this.operands = ["0"];
     this.currentIndex = 0;
-    var self = this;
+    this.lastOperand = '';
+    this.lastNumber = '';
     this.keys = document.getElementsByClassName('tecla');
     for(var i = 0; i< this.keys.length ; i++){
       this.keys[i].addEventListener('mousedown', this.scaleDown.bind(this));
@@ -97,8 +98,18 @@ var calculadora = {
     document.getElementById('display').innerHTML = value;
   },
   calcular: function(){
+    if (this.operands.length == 1){
+      console.log(this.lastNumber, this.lastOperand);
+      this.operands.push(this.lastOperand);
+      this.operands.push(this.lastNumber);
+    }
     var operacion = this.operands.join(' ');
     var resultado = eval(operacion);
+    // Se asumen que siempre el ultimo operador es el último en el arreglo
+    this.lastNumber = this.operands[this.operands.length -1];
+    // Se asumen que el ultimo operador es el penultimo en el arreglo
+    this.lastOperand = this.operands[this.operands.length - 2];
+    // Se resetea el arreglo y el resultado como inicial.
     this.operands = [String(resultado).substring(0,8)];
     this.currentIndex = 0;
     this.displayValue(String(resultado).substring(0, 8));
